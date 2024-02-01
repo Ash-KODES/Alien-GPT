@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import "../css/terminal.css";
-import HackerSimulator from "./HackSimulator";
+
 const Typewriter = (text, delay, func, Spinner, spinTime) => {
   const startTime = new Date();
   let Output = "";
@@ -41,12 +41,57 @@ const Typewriter = (text, delay, func, Spinner, spinTime) => {
 };
 
 function Terminal() {
+  const [inputValue, setInputValue] = useState("");
+  const [outputText, setOutputText] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [conversationHistory, setConversationHistory] = useState([]);
+  const cursor = "▮";
+  let previousCommand;
   const [Text1, setText1] = useState("");
   const [Text2, setText2] = useState("");
   const [Text3, setText3] = useState("");
   const [Text4, setText4] = useState("");
-  const cursor = "▮";
-  let previousCommand;
+  const handleUserInput = (event) => {
+    setInputValue(event.target.value);
+  };
+  const handleEnterPress = () => {
+    if (outputText.includes("Access")) {
+      if (inputValue.trim() !== "") {
+        const newCommand = {
+          user: `guest@renisal.me:~$ ${inputValue}`,
+          system: "",
+        };
+
+        setConversationHistory([...conversationHistory, newCommand]);
+        setLoading(true);
+
+        // Assume your API URL is "https://example.com/api"
+        // Replace it with your actual API endpoint
+        fetch("https://example.com/api", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ question: inputValue }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            const newResponse = {
+              user: "",
+              system: data.answer || "No answer received from the API",
+            };
+
+            setConversationHistory([...conversationHistory, newResponse]);
+            setLoading(false);
+            setInputValue(""); // Clear input after receiving the response
+          })
+          .catch((error) => {
+            console.error("Error fetching data:", error);
+            setLoading(false);
+          });
+      }
+    }
+  };
 
   const [prevusedCommand, setprevusedCommand] = useState([]);
 
@@ -168,7 +213,19 @@ function Terminal() {
         {Text3.includes("Access") ? (
           <span className="commands">
             <span className="userPrefix">guest@renisal.me:~$</span>{" "}
-            <input type="text" id="command" name="command" autoFocus></input>
+            <input
+              type="text"
+              id="command"
+              name="command"
+              autoFocus
+              value={inputValue}
+              onChange={handleUserInput}
+              onKeyPress={(event) => {
+                if (event.key === "Enter") {
+                  handleEnterPress();
+                }
+              }}
+            />
           </span>
         ) : (
           ""
