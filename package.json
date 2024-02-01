@@ -1,6 +1,5 @@
 {
-  "homepage": "https://montymahato.github.io/terminal-portfolio",
-  "name": "terminal-portfolio",
+  "name": "Alien-GPT",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

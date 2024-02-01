@@ -222,6 +222,7 @@ function Terminal() {
               onChange={handleUserInput}
               onKeyPress={(event) => {
                 if (event.key === "Enter") {
+                  console.log("Enter pressed");
                   handleEnterPress();
                 }
               }}
