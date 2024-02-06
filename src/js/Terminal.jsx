@@ -40,10 +40,9 @@ const Typewriter = (text, delay, func, Spinner, spinTime) => {
   }, delay);
 };
 
-const GPT_API_KEY = "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";
+const GPT_API_KEY = "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";
 const GPT_API_URL =
-  "https://api.openai.com/v1/engines/text-davinci-003/completions";
-
+  "https://api.openai.com/v1/engines/gpt-3.5-turbo-instruct/completions";
 async function makeGPTApiCall(prompt) {
   const headers = {
     "Content-Type": "application/json",
@@ -55,17 +54,22 @@ async function makeGPTApiCall(prompt) {
     max_tokens: 500,
   };
 
-  const response = await fetch(GPT_API_URL, {
-    method: "POST",
-    headers: headers,
-    body: JSON.stringify(requestBody),
-  });
+  try {
+    const response = await fetch(GPT_API_URL, {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify(requestBody),
+    });
 
-  if (!response.ok) {
-    throw new Error(`API request failed with status: ${response.status}`);
+    if (!response.ok) {
+      throw new Error(`API request failed with status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data.choices[0].text;
+  } catch (error) {
+    throw new Error(`API request failed with error: ${error.message}`);
   }
-
-  return response.json().choices[0].text;
 }
 
 function Terminal() {
@@ -82,44 +86,56 @@ function Terminal() {
   const handleUserInput = (event) => {
     setInputValue(event.target.value);
   };
-  const handleEnterPress = () => {
-    if (outputText.includes("Access")) {
-      if (inputValue.trim() !== "") {
-        const newCommand = {
-          user: `AlienGPT@muthr2:~$ ${inputValue}`,
-          system: "",
-        };
-
-        setConversationHistory([...conversationHistory, newCommand]);
-        setLoading(true);
-
-        // Assume your API URL is "https://example.com/api"
-        // Replace it with your actual API endpoint
-        fetch("https://example.com/api", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ question: inputValue }),
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            const newResponse = {
-              user: "",
-              system: data.answer || "No answer received from the API",
-            };
-
-            setConversationHistory([...conversationHistory, newResponse]);
-            setLoading(false);
-            setInputValue(""); // Clear input after receiving the response
-          })
-          .catch((error) => {
-            console.error("Error fetching data:", error);
-            setLoading(false);
-          });
-      }
+  const handleEnterPress = async () => {
+    const data = await makeGPTApiCall(inputValue); // wait for the asynchronous call to complete
+    if (data) {
+      console.log(data);
+      setConversationHistory([
+        ...conversationHistory,
+        { input: inputValue, data: data },
+      ]);
+      setInputValue("");
     }
   };
+
+  // console.log(outputText);
+  // if (outputText.includes("Access")) {
+  //   if (inputValue.trim() !== "") {
+  //     const newCommand = {
+  //       user: `AlienGPT@muthr2:~$ ${inputValue}`,
+  //       system: "",
+  //     };
+
+  //     setConversationHistory([...conversationHistory, newCommand]);
+  //     setLoading(true);
+
+  //     // Assume your API URL is "https://example.com/api"
+  //     // Replace it with your actual API endpoint
+  //     fetch("https://example.com/api", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({ question: inputValue }),
+  //     })
+  //       .then((response) => response.json())
+  //       .then((data) => {
+  //         const newResponse = {
+  //           user: "",
+  //           system: data.answer || "No answer received from the API",
+  //         };
+
+  //         setConversationHistory([...conversationHistory, newResponse]);
+  //         setLoading(false);
+  //         setInputValue(""); // Clear input after receiving the response
+  //       })
+  //       .catch((error) => {
+  //         console.error("Error fetching data:", error);
+  //         setLoading(false);
+  //       });
+  //   }
+  // }
+  // };
 
   const [prevusedCommand, setprevusedCommand] = useState([]);
 
@@ -237,23 +253,39 @@ function Terminal() {
         <br></br>
 
         {Text3.includes("Access") ? (
-          <span className="commands">
-            <span className="userPrefix">AlienGPT@muthr2:~$</span>{" "}
-            <input
-              type="text"
-              id="command"
-              name="command"
-              autoFocus
-              value={inputValue}
-              onChange={handleUserInput}
-              onKeyPress={(event) => {
-                if (event.key === "Enter") {
-                  console.log("Enter pressed");
-                  handleEnterPress();
-                }
-              }}
-            />
-          </span>
+          <>
+            {conversationHistory.length > 0 &&
+              conversationHistory.map((item, idx) => {
+                return (
+                  <div key={idx}>
+                    <span className="userPrefix">AlienGPT@muthr2:~$ </span>
+                    <span>{item.input}</span>
+                    <div>
+                      <span className="userPrefix">AlienGPT@muthr2:~$ </span>
+                      <span>{item.data}</span>
+                    </div>
+                  </div>
+                );
+              })}
+
+            <span className="commands">
+              <span className="userPrefix">AlienGPT@muthr2:~$</span>{" "}
+              <input
+                type="text"
+                id="command"
+                name="command"
+                autoFocus
+                value={inputValue}
+                onChange={handleUserInput}
+                onKeyPress={(event) => {
+                  if (event.key === "Enter") {
+                    console.log("Enter pressed");
+                    handleEnterPress();
+                  }
+                }}
+              />
+            </span>
+          </>
         ) : (
           ""
         )}
