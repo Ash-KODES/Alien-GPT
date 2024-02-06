@@ -40,6 +40,34 @@ const Typewriter = (text, delay, func, Spinner, spinTime) => {
   }, delay);
 };
 
+const GPT_API_KEY = "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";
+const GPT_API_URL =
+  "https://api.openai.com/v1/engines/text-davinci-003/completions";
+
+async function makeGPTApiCall(prompt) {
+  const headers = {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${GPT_API_KEY}`,
+  };
+
+  const requestBody = {
+    prompt: prompt,
+    max_tokens: 500,
+  };
+
+  const response = await fetch(GPT_API_URL, {
+    method: "POST",
+    headers: headers,
+    body: JSON.stringify(requestBody),
+  });
+
+  if (!response.ok) {
+    throw new Error(`API request failed with status: ${response.status}`);
+  }
+
+  return response.json().choices[0].text;
+}
+
 function Terminal() {
   const [inputValue, setInputValue] = useState("");
   const [outputText, setOutputText] = useState("");
