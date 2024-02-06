@@ -86,7 +86,7 @@ function Terminal() {
     if (outputText.includes("Access")) {
       if (inputValue.trim() !== "") {
         const newCommand = {
-          user: `guest@renisal.me:~$ ${inputValue}`,
+          user: `AlienGPT@muthr2:~$ ${inputValue}`,
           system: "",
         };
 
@@ -133,7 +133,7 @@ function Terminal() {
     while (id--) {
       clearInterval(id);
     }
-    setText1("ssh guest@renisal.me");
+    setText1("ssh AlienGPT@muthr2");
     setText3("Access Granted!");
   }
 
@@ -150,8 +150,8 @@ function Terminal() {
           while (id--) {
             clearInterval(id);
           }
-          setText1("ssh guest@renisal.me");
-          setText2("guest@renisal.me's password:");
+          setText1("ssh AlienGPT@muthr2");
+          setText2("AlienGPT@muthr2's password:");
           setText3("Access Granted!");
         }
         const CommandArea = document.getElementById("command");
@@ -159,12 +159,12 @@ function Terminal() {
           previousCommand = CommandArea.value;
           setprevusedCommand((prevArray) => [
             ...prevArray,
-            "guest@renisal.me:~$ " + previousCommand,
+            "AlienGPT@muthr2:~$ " + previousCommand,
           ]);
           if (CommandArea.value === "github") {
             window.open("https://github.com/montymahato", "_blank");
           } else if (CommandArea.value === "mysite") {
-            window.open("https://renisal.me", "_blank");
+            window.open("https://muthr2", "_blank");
           } else if (CommandArea.value === "source") {
             window.open(
               "https://github.com/montymahato/terminal-portfolio",
@@ -176,10 +176,10 @@ function Terminal() {
       }
     });
 
-    Typewriter("ssh guest@renisal.me", 100, setText1);
+    Typewriter("ssh AlienGPT@muthr2", 100, setText1);
 
     setTimeout(() => {
-      setText2("guest@renisal.me's password:▮");
+      setText2("AlienGPT@muthr2's password:▮");
     }, 3000);
 
     setTimeout(() => {
@@ -187,11 +187,11 @@ function Terminal() {
     }, 4300);
 
     setTimeout(() => {
-      setText3("Connecting to guest@renisal.me...");
+      setText3("Connecting to AlienGPT@muthr2...");
     }, 4300);
 
     setTimeout(() => {
-      setText2("guest@renisal.me's password:");
+      setText2("AlienGPT@muthr2's password:");
       setText3("> Access granted.");
     }, 7300);
   }, []);
@@ -224,23 +224,21 @@ function Terminal() {
         </span>
         <br />
         {Text3.includes("Access") ? (
-          <pre>
-            {`              _______                  _             _ 
-             |__   __|                (_)           | |
-       _ __ ___ | | ___ _ __ _ __ ___  _ _ __   __ _| |
-      | '_ \` _ \\| |/ _ \\ '__| '_ \` _ \\| | '_ \\ / _\` | |
-      | | | | | | |  __/ |  | | | | | | | | | | (_| | |
-      |_| |_| |_|_|\\___|_|  |_| |_| |_|_|_| |_|\\__,_|_|
-                                                
-    `}
-          </pre>
+          <pre>{`##   ##  ### ###   ######  ### ###  ######    #####   
+### ###  ### ###   # ## #  ### ###  ### ###  ##   ##  
+#######  ### ###     ##    ### ###  ### ###      ###  
+#######  ### ###     ##    #######  ######      ###   
+### ###  ### ###     ##    ### ###  ### ##     ###    
+### ###  ### ###     ##    ### ###  ### ###   ###     
+### ###   #####      ##    ### ###  ### ###  #######  
+        `}</pre>
         ) : null}
 
         <br></br>
 
         {Text3.includes("Access") ? (
           <span className="commands">
-            <span className="userPrefix">guest@renisal.me:~$</span>{" "}
+            <span className="userPrefix">AlienGPT@muthr2:~$</span>{" "}
             <input
               type="text"
               id="command"
