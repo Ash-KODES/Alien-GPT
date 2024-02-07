@@ -40,7 +40,7 @@ const Typewriter = (text, delay, func, Spinner, spinTime) => {
   }, delay);
 };
 
-const GPT_API_KEY = "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";
+const GPT_API_KEY = "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";
 const GPT_API_URL =
   "https://api.openai.com/v1/engines/gpt-3.5-turbo-instruct/completions";
 async function makeGPTApiCall(prompt) {
