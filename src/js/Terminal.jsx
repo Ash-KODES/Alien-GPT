@@ -293,5 +293,4 @@ function Terminal() {
     </div>
   );
 }
-
 export default Terminal;
