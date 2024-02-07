@@ -7,6 +7,15 @@
   line-height: 1.2;
   background-color: black;
   height: auto;
+  position: relative;
+}
+
+.img-container{
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  border-radius: 36px;
+  overflow: hidden;
 }
 
 .aboutme {
