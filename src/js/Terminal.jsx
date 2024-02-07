@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import "../css/terminal.css";
+import imgSrc from "../images/muthr2terminal.gif";
 
 const Typewriter = (text, delay, func, Spinner, spinTime) => {
   const startTime = new Date();
@@ -214,6 +215,9 @@ function Terminal() {
 
   return (
     <div className="terminal">
+    <div className="img-container">
+      <img src={imgSrc} alt="computer img" className="static-img"/>
+    </div>
       <div className="console">
         <span className="userPrefix">
           user@localhost:~$
