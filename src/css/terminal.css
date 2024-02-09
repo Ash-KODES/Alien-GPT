@@ -35,7 +35,7 @@
   border: 0px;
   font-family: Inconsolata, Arial, Helvetica, sans-serif;
   font-size: 18px;
-  color: white;
+  color: rgb(7, 187, 7);
 }
 
 .mcq-wrapper {
@@ -98,7 +98,7 @@ input[type="text"]:focus {
 
 .userPrefix {
   margin-right: 7px;
-  color: rgb(7, 187, 7);
+  color: yellow;
 }
 
 @media screen and (max-width: 768px) {
