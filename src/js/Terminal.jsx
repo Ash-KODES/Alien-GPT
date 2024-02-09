@@ -41,7 +41,7 @@ const Typewriter = (text, delay, func, Spinner, spinTime) => {
   }, delay);
 };
 
-const GPT_API_KEY = "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";
+const GPT_API_KEY = "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";
 const GPT_API_URL =
   "https://api.openai.com/v1/engines/gpt-3.5-turbo-instruct/completions";
 async function makeGPTApiCall(prompt) {
@@ -98,45 +98,6 @@ function Terminal() {
       setInputValue("");
     }
   };
-
-  // console.log(outputText);
-  // if (outputText.includes("Access")) {
-  //   if (inputValue.trim() !== "") {
-  //     const newCommand = {
-  //       user: `AlienGPT@muthr2:~$ ${inputValue}`,
-  //       system: "",
-  //     };
-
-  //     setConversationHistory([...conversationHistory, newCommand]);
-  //     setLoading(true);
-
-  //     // Assume your API URL is "https://example.com/api"
-  //     // Replace it with your actual API endpoint
-  //     fetch("https://example.com/api", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({ question: inputValue }),
-  //     })
-  //       .then((response) => response.json())
-  //       .then((data) => {
-  //         const newResponse = {
-  //           user: "",
-  //           system: data.answer || "No answer received from the API",
-  //         };
-
-  //         setConversationHistory([...conversationHistory, newResponse]);
-  //         setLoading(false);
-  //         setInputValue(""); // Clear input after receiving the response
-  //       })
-  //       .catch((error) => {
-  //         console.error("Error fetching data:", error);
-  //         setLoading(false);
-  //       });
-  //   }
-  // }
-  // };
 
   const [prevusedCommand, setprevusedCommand] = useState([]);
 
@@ -212,6 +173,18 @@ function Terminal() {
       setText3("> Access granted.");
     }, 7300);
   }, []);
+
+   useEffect(() => {
+     const audio = new Audio('./theme.mp3');
+     audio.loop = true;
+     audio.play();
+
+     return () => {
+       // Cleanup on component unmount
+       audio.pause();
+       audio.currentTime = 0;
+     };
+   }, []);
 
   return (
     <div className="terminal">
