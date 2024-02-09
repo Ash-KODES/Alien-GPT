@@ -41,7 +41,7 @@ const Typewriter = (text, delay, func, Spinner, spinTime) => {
   }, delay);
 };
 
-const GPT_API_KEY = "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";
+const GPT_API_KEY = "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";
 const GPT_API_URL =
   "https://api.openai.com/v1/engines/gpt-3.5-turbo-instruct/completions";
 async function makeGPTApiCall(prompt) {
@@ -180,7 +180,6 @@ function Terminal() {
      audio.play();
 
      return () => {
-       // Cleanup on component unmount
        audio.pause();
        audio.currentTime = 0;
      };
