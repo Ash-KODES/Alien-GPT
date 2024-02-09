@@ -2,7 +2,7 @@
 
 body {
   margin: 0px;
-  font-family: -apple-system, BlinkMacSystemFont, Inter, sans-serif, Arial;
+  font-family: 'IBM Plex Mono', monospace;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: black;
