@@ -1,6 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import "../css/terminal.css";
 import imgSrc from "../images/muthr2terminal.gif";
+import ReactAudioPlayer from "react-audio-player";
+import sound from "../theme.mp3";
 
 const Typewriter = (text, delay, func, Spinner, spinTime) => {
   const startTime = new Date();
@@ -174,22 +176,61 @@ function Terminal() {
     }, 7300);
   }, []);
 
-   useEffect(() => {
-     const audio = new Audio('./theme.mp3');
-     audio.loop = true;
-     audio.play();
+  // useEffect(() => {
+  //   playSound();
+  //   //  const audio = new Audio('/theme.mp3');
+  //   //  audio.loop = true;
+  //   //  audio.play();
 
-     return () => {
-       audio.pause();
-       audio.currentTime = 0;
-     };
-   }, []);
+  //   //  return () => {
+  //   //    audio.pause();
+  //   //    audio.currentTime = 0;
+  //   //  };
+  // }, []);
+
+  //   const Playit = () => {
+  //     var audio = new Audio(sound);
+  //     audio.play();
+  // }
+  // useEffect(() => {Playit()}, []);
+  const audioRef = useRef(null);
+  const isAudioPlaying = useRef(false);
+
+  const playAudio = () => {
+    if (!isAudioPlaying.current) {
+      const audio = new Audio(sound);
+      audio.loop = true;
+      audio.play();
+      audioRef.current = audio;
+      isAudioPlaying.current = true;
+    }
+  };
+
+  const handleKeyDown = (event) => {
+    playAudio();
+  };
+
+  useEffect(() => {
+    // Attach the event listener to the window
+    window.addEventListener('keydown', handleKeyDown);
+
+    // Clean up when the component unmounts
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      if (isAudioPlaying.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+      }
+    };
+  }, []); // Empty dependency array means this effect runs once on mount
+
 
   return (
     <div className="terminal">
-    <div className="img-container">
-      <img src={imgSrc} alt="computer img" className="static-img"/>
-    </div>
+     
+      <div className="img-container">
+        <img src={imgSrc} alt="computer img" className="static-img" />
+      </div>
       <div className="console">
         <span className="userPrefix">
           user@localhost:~$
