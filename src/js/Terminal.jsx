@@ -3,6 +3,7 @@ import "../css/terminal.css";
 import imgSrc from "../images/muthr2terminal.gif";
 import ReactAudioPlayer from "react-audio-player";
 import sound from "../theme.mp3";
+import imgSrc1 from "../images/matrix.gif";
 
 const Typewriter = (text, delay, func, Spinner, spinTime) => {
   const startTime = new Date();
@@ -212,11 +213,11 @@ function Terminal() {
 
   useEffect(() => {
     // Attach the event listener to the window
-    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
 
     // Clean up when the component unmounts
     return () => {
-      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener("keydown", handleKeyDown);
       if (isAudioPlaying.current) {
         audioRef.current.pause();
         audioRef.current.currentTime = 0;
@@ -224,13 +225,8 @@ function Terminal() {
     };
   }, []); // Empty dependency array means this effect runs once on mount
 
-
   return (
     <div className="terminal">
-     
-      <div className="img-container">
-        <img src={imgSrc} alt="computer img" className="static-img" />
-      </div>
       <div className="console">
         <span className="userPrefix">
           user@localhost:~$
@@ -279,7 +275,7 @@ function Terminal() {
                     <span>{item.input}</span>
                     <div>
                       <span className="userPrefix">AlienGPT@muthr2:~$ </span>
-                      <span>{item.data}</span>
+                      <span className="output-text-data">{item.data}</span>
                     </div>
                   </div>
                 );
@@ -306,6 +302,15 @@ function Terminal() {
         ) : (
           ""
         )}
+      </div>
+
+      <div className="img-container">
+        <div>
+          <img src={imgSrc} alt="computer img" className="static-img" />
+        </div>
+        <div className="matrix-container">
+          <img src={imgSrc1} alt="matrix gif" className="matrix-img" />
+        </div>
       </div>
     </div>
   );

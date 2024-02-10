@@ -2,25 +2,48 @@
 
 .terminal {
   color: white;
-  font-family: 'IBM Plex Mono', monospace;
+  font-family: "IBM Plex Mono", monospace;
   font-size: 20px;
   line-height: 1.2;
   background-color: black;
   height: auto;
   position: relative;
+  display: flex;
+  justify-content: space-between;
 }
 
-.img-container{
+/* .img-container{
   position: absolute;
   top: 24px;
   right: 24px;
   border-radius: 36px;
   overflow: hidden;
+} */
+
+.img-container {
+  padding: 24px;
 }
 
+.static-img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
+.matrix-container {
+  width: 600px;
+  overflow: hidden;
+}
+
+.matrix-img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  scale: 1.3;
+}
 .aboutme {
   width: 50%;
-  color:rgb(194, 181, 147);
+  color: rgb(194, 181, 147);
 }
 
 .previousCommands {
@@ -33,11 +56,14 @@
   width: 100%;
   background: none;
   border: 0px;
-  font-family: 'IBM Plex Mono', monospace;
+  font-family: "IBM Plex Mono", monospace;
   font-size: 21px;
   color: rgb(7, 187, 7);
 }
 
+.output-text-data {
+  word-break: break-all;
+}
 .mcq-wrapper {
   position: relative;
 }
@@ -54,13 +80,11 @@
 .mcq-option {
   padding: 1px;
   cursor: pointer;
- 
 }
 
 .mcq-option:hover a {
   background-color: #f2f2f2;
   color: black;
-  
 }
 
 .mcq-option:hover {
@@ -102,7 +126,6 @@ input[type="text"]:focus {
 }
 
 @media screen and (max-width: 768px) {
-
   /* CSS rules for mobile devices */
   #skipButton {
     font-size: large;
