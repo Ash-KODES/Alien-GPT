@@ -77,6 +77,7 @@ async function makeGPTApiCall(prompt) {
 
 function Terminal() {
   const [inputValue, setInputValue] = useState("");
+  const [toggle, setToggle] = useState(false);
   const [gptApiKey, setGptApiKey] = useState("");
   const [conversationHistory, setConversationHistory] = useState([]);
   const cursor = "▮";
@@ -108,7 +109,7 @@ function Terminal() {
   };
 
   const [prevusedCommand, setprevusedCommand] = useState([]);
-  const [isAudioPlaying, setIsAudioPlaying] = useState(true); 
+  const [isAudioPlaying, setIsAudioPlaying] = useState(true);
 
   function SkipIntro() {
     let id = setTimeout(() => {}, 0);
@@ -173,47 +174,26 @@ function Terminal() {
     }, 7300);
   }, []);
 
-  const audioRef = useRef(null);
+  const audioRef = useRef(new Audio(sound));
 
-  const playAudio = () => {
-    if (!isAudioPlaying.current) {
-      const audio = new Audio(sound);
-      audio.loop = true;
-      audio.play();
-      audioRef.current = audio;
-      isAudioPlaying.current = true;
+  const handleToggle = () => {
+    setToggle((toggle) => !toggle);
+    handlePlayPause();
+  };
+
+  const handlePlayPause = () => {
+    if (!toggle) {
+      audioRef.current.play();
+    } else {
+      audioRef.current.pause();
     }
   };
-  // Function to toggle audio play/pause
-  const toggleAudio = () => {
-    setIsAudioPlaying((prevIsAudioPlaying) => !prevIsAudioPlaying);
-
-    if (audioRef.current) {
-      if (isAudioPlaying) {
-        audioRef.current.pause();
-      } else {
-        audioRef.current.play();
-      }
-    }
-  };
-
-  const handleKeyDown = (event) => {
-    playAudio();
-  };
-
   useEffect(() => {
-    // Attach the event listener to the window
-    window.addEventListener("keydown", handleKeyDown);
+    audioRef.current.loop = true;
+    audioRef.current.volume = 0.5;
+  }, []);
 
-    // Clean up when the component unmounts
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-      if (isAudioPlaying.current) {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
-      }
-    };
-  }, []); // Empty dependency array means this effect runs once on mount
+  // Empty dependency array means this effect runs once on mount
 
   return (
     <div className="terminal">
@@ -254,18 +234,22 @@ function Terminal() {
         ) : null}
 
         <br></br>
-        <div>
-          <span>Enter GPT API Key:</span>
-          <input
-            type="text"
-            value={gptApiKey}
-            onChange={handleGptApiKeyChange}
-            placeholder="Enter your GPT API Key"
-          />
-          <button onClick={submitGptApiKey}>Submit</button>
-        </div>
+
         {Text3.includes("Access") ? (
           <>
+            <div>
+              <span>Enter GPT API Key:</span>
+              <input
+                class="keyInput"
+                type="text"
+                value={gptApiKey}
+                onChange={handleGptApiKeyChange}
+                placeholder="Enter your GPT API Key"
+              />
+              <button className="button-3" onClick={submitGptApiKey}>
+                Submit
+              </button>
+            </div>
             {conversationHistory.length > 0 &&
               conversationHistory.map((item, idx) => {
                 return (
@@ -305,26 +289,16 @@ function Terminal() {
 
       <div className="img-container">
         <div>
+          <label class="switch">
+            <input type="checkbox" onClick={handleToggle} checked={toggle} />
+            <span class="slider round"></span>
+          </label>
+        </div>
+        <div>
           <img src={imgSrc} alt="computer img" className="static-img" />
         </div>
         <div className="matrix-container">
           <img src={imgSrc1} alt="matrix gif" className="matrix-img" />
-          <div className="form-check form-switch">
-            <input
-              className="form-check-input white-checkbox"
-              type="checkbox"
-              role="switch"
-              id="flexSwitchCheckChecked"
-              checked={isAudioPlaying} 
-              onChange={toggleAudio} 
-            />
-            <label
-              className="form-check-label"
-              htmlFor="flexSwitchCheckChecked"
-            >
-              {isAudioPlaying ? "Audio On" : "Audio Off"}
-            </label>
-          </div>
         </div>
       </div>
     </div>
