@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import "../css/terminal.css";
 import imgSrc from "../images/muthr2terminal.gif";
-import ReactAudioPlayer from "react-audio-player";
 import sound from "../theme.mp3";
 import imgSrc1 from "../images/matrix.gif";
 
@@ -43,8 +42,8 @@ const Typewriter = (text, delay, func, Spinner, spinTime) => {
     }
   }, delay);
 };
-
-const GPT_API_KEY = "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";
+let temp = "";
+const GPT_API_KEY = temp;
 const GPT_API_URL =
   "https://api.openai.com/v1/engines/gpt-3.5-turbo-instruct/completions";
 async function makeGPTApiCall(prompt) {
@@ -78,8 +77,7 @@ async function makeGPTApiCall(prompt) {
 
 function Terminal() {
   const [inputValue, setInputValue] = useState("");
-  const [outputText, setOutputText] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [gptApiKey, setGptApiKey] = useState("");
   const [conversationHistory, setConversationHistory] = useState([]);
   const cursor = "▮";
   let previousCommand;
@@ -90,8 +88,15 @@ function Terminal() {
   const handleUserInput = (event) => {
     setInputValue(event.target.value);
   };
+  const handleGptApiKeyChange = (event) => {
+    setGptApiKey(event.target.value);
+  };
+  const submitGptApiKey = () => {
+    temp = gptApiKey;
+    console.log("GPT API Key submitted:", gptApiKey);
+  };
   const handleEnterPress = async () => {
-    const data = await makeGPTApiCall(inputValue); // wait for the asynchronous call to complete
+    const data = await makeGPTApiCall(inputValue);
     if (data) {
       console.log(data);
       setConversationHistory([
@@ -103,6 +108,7 @@ function Terminal() {
   };
 
   const [prevusedCommand, setprevusedCommand] = useState([]);
+  const [isAudioPlaying, setIsAudioPlaying] = useState(true); 
 
   function SkipIntro() {
     let id = setTimeout(() => {}, 0);
@@ -142,16 +148,6 @@ function Terminal() {
             ...prevArray,
             "AlienGPT@muthr2:~$ " + previousCommand,
           ]);
-          if (CommandArea.value === "github") {
-            window.open("https://github.com/montymahato", "_blank");
-          } else if (CommandArea.value === "mysite") {
-            window.open("https://muthr2", "_blank");
-          } else if (CommandArea.value === "source") {
-            window.open(
-              "https://github.com/montymahato/terminal-portfolio",
-              "_blank"
-            );
-          }
           CommandArea.value = "";
         }
       }
@@ -177,25 +173,7 @@ function Terminal() {
     }, 7300);
   }, []);
 
-  // useEffect(() => {
-  //   playSound();
-  //   //  const audio = new Audio('/theme.mp3');
-  //   //  audio.loop = true;
-  //   //  audio.play();
-
-  //   //  return () => {
-  //   //    audio.pause();
-  //   //    audio.currentTime = 0;
-  //   //  };
-  // }, []);
-
-  //   const Playit = () => {
-  //     var audio = new Audio(sound);
-  //     audio.play();
-  // }
-  // useEffect(() => {Playit()}, []);
   const audioRef = useRef(null);
-  const isAudioPlaying = useRef(false);
 
   const playAudio = () => {
     if (!isAudioPlaying.current) {
@@ -204,6 +182,18 @@ function Terminal() {
       audio.play();
       audioRef.current = audio;
       isAudioPlaying.current = true;
+    }
+  };
+  // Function to toggle audio play/pause
+  const toggleAudio = () => {
+    setIsAudioPlaying((prevIsAudioPlaying) => !prevIsAudioPlaying);
+
+    if (audioRef.current) {
+      if (isAudioPlaying) {
+        audioRef.current.pause();
+      } else {
+        audioRef.current.play();
+      }
     }
   };
 
@@ -264,7 +254,16 @@ function Terminal() {
         ) : null}
 
         <br></br>
-
+        <div>
+          <span>Enter GPT API Key:</span>
+          <input
+            type="text"
+            value={gptApiKey}
+            onChange={handleGptApiKeyChange}
+            placeholder="Enter your GPT API Key"
+          />
+          <button onClick={submitGptApiKey}>Submit</button>
+        </div>
         {Text3.includes("Access") ? (
           <>
             {conversationHistory.length > 0 &&
@@ -310,6 +309,22 @@ function Terminal() {
         </div>
         <div className="matrix-container">
           <img src={imgSrc1} alt="matrix gif" className="matrix-img" />
+          <div className="form-check form-switch">
+            <input
+              className="form-check-input white-checkbox"
+              type="checkbox"
+              role="switch"
+              id="flexSwitchCheckChecked"
+              checked={isAudioPlaying} 
+              onChange={toggleAudio} 
+            />
+            <label
+              className="form-check-label"
+              htmlFor="flexSwitchCheckChecked"
+            >
+              {isAudioPlaying ? "Audio On" : "Audio Off"}
+            </label>
+          </div>
         </div>
       </div>
     </div>
